@@ -10,14 +10,15 @@
    "Your apps" → Web app → SDK setup and configuration → Config.
    Pastikan `databaseURL` ikut terisi (alamat Realtime Database).
    ----------------------------------------------------------- */
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "GANTI_DENGAN_API_KEY",
-  authDomain: "nama-project.firebaseapp.com",
-  databaseURL: "https://nama-project-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "nama-project",
-  storageBucket: "nama-project.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:xxxxxxxxxxxxxxxx",
+  apiKey: "AIzaSyDljRhwCVnJpQ2JcoNouMzMqL4Ng5c0iWY",
+  authDomain: "skz-yk.firebaseapp.com",
+  projectId: "skz-yk",
+  storageBucket: "skz-yk.firebasestorage.app",
+  messagingSenderId: "959559417054",
+  appId: "1:959559417054:web:bcc20b8ae5cb7320fa164f",
+  measurementId: "G-53QVKY1D10"
 };
 
 /* -----------------------------------------------------------
