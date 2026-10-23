@@ -106,9 +106,12 @@ function remainingQuota() { return MAX_SEATS_PER_EMAIL - ownedSeats().length - s
 // 6) RENDER DENAH KURSI
 function buildSeatMap() {
   const frag = document.createDocumentFragment();
+
   LAYOUT.forEach(({ row, cells }) => {
     const rowEl = document.createElement("div");
     rowEl.className = "seat-row";
+    rowEl.setAttribute("role", "row"); // <-- Ini yang bikin CSS-mu jalan
+
     cells.forEach((n) => {
       if (!n) {
         const gap = document.createElement("span");
@@ -116,38 +119,55 @@ function buildSeatMap() {
         rowEl.appendChild(gap);
         return;
       }
-      const id = `${row}${String(n).padStart(2, "0")}`;
+      const id = `${row}${String(n).padStart(2, "0")}`; 
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "seat available";
       btn.dataset.seat = id;
       btn.textContent = id;
+      btn.setAttribute("role", "gridcell"); // <-- Ini juga penting untuk CSS-mu
+      btn.setAttribute("aria-label", `Kursi ${id}, tersedia`);
       seatButtons.set(id, btn);
       rowEl.appendChild(btn);
     });
+
     frag.appendChild(rowEl);
   });
+
   el.seatMap.appendChild(frag);
   el.seatMap.addEventListener("click", onSeatClick);
 }
 
 function renderSeats() {
   let booked = 0;
+
   seatButtons.forEach((btn, id) => {
     const data = state.seats[id];
     let status = "available";
+
     if (data) {
       booked++;
       status = state.emailKey && data.owner === state.emailKey ? "mine" : "booked";
     } else if (state.selected.has(id)) {
       status = "selected";
     }
+
     if (!btn.classList.contains(status)) {
       btn.classList.remove("available", "selected", "mine", "booked");
       btn.classList.add(status);
     }
     btn.disabled = status === "booked" || status === "mine";
+
+    const labels = {
+      available: "tersedia",
+      selected: "sedang dipilih",
+      mine: "milik Anda",
+      booked: "sudah dibooking",
+    };
+    btn.setAttribute("aria-label", `Kursi ${id}, ${labels[status]}`);
+    btn.title = status === "booked" ? `Dibooking oleh ${data.emailMasked || "pengguna lain"}` : `Kursi ${id}`;
   });
+
   el.statBooked.textContent = booked;
   el.statAvailable.textContent = TOTAL_SEATS - booked;
   renderSummary();
