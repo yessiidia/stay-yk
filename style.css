@@ -1,0 +1,372 @@
+/* ===========================================================
+   CineSeat — gaya antarmuka
+   =========================================================== */
+:root {
+  --bg: #0b0b12;
+  --surface: #151521;
+  --surface-2: #1d1d2c;
+  --border: #2a2a3d;
+  --text: #f1f0f7;
+  --muted: #9a98b0;
+
+  --accent: #ff3d5a;        /* merah tirai bioskop */
+  --accent-2: #ffb547;      /* emas lampu */
+
+  --seat-available: #2d6cdf;
+  --seat-available-hover: #4a86f5;
+  --seat-selected: #ffb547;
+  --seat-mine: #1fbf8f;
+  --seat-booked: #4a4a58;
+
+  --radius: 14px;
+  --font-display: "Bebas Neue", Impact, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { min-height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.bg-glow {
+  position: fixed;
+  inset: -20% -10% auto -10%;
+  height: 70vh;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 61, 90, 0.18), transparent 60%),
+    radial-gradient(ellipse at 80% 10%, rgba(255, 181, 71, 0.10), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(16px, 4vw, 48px);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  display: grid; place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: var(--accent);
+  font-size: 14px;
+}
+.brand-name { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; }
+.brand-name span { color: var(--accent); }
+
+.conn {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--muted);
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.conn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-2); }
+.conn.online .dot { background: var(--seat-mine); box-shadow: 0 0 8px var(--seat-mine); }
+.conn.offline .dot { background: var(--accent); }
+
+/* ---------- Layout ---------- */
+.layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 28px;
+  padding: 8px clamp(16px, 4vw, 48px) 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.panel, .hall {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.panel {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-self: start;
+  position: sticky;
+  top: 16px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  font-weight: 600;
+}
+.movie-title {
+  font-family: var(--font-display);
+  font-size: 44px;
+  letter-spacing: 1px;
+  line-height: 1;
+  margin: 6px 0 10px;
+}
+.muted { color: var(--muted); font-size: 14px; }
+.muted strong { color: var(--text); }
+
+/* ---------- Form email ---------- */
+.email-form label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.input-row { display: flex; gap: 8px; }
+.input-row input,
+.text-input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.text-input { display: block; width: 100%; margin-bottom: 14px; }
+.input-row input:focus,
+.text-input:focus {
+  outline: none;
+  border-color: var(--seat-available);
+  box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.25);
+}
+.input-row input.invalid, .text-input.invalid { border-color: var(--accent); }
+.input-row input.valid, .text-input.valid { border-color: var(--seat-mine); }
+
+.field-msg { min-height: 20px; font-size: 13px; margin-top: 6px; color: var(--muted); }
+.field-msg.error { color: var(--accent); }
+.field-msg.ok { color: var(--seat-mine); }
+
+/* ---------- Tombol ---------- */
+.btn {
+  font: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .15s, background .2s, opacity .2s;
+}
+.btn:active:not(:disabled) { transform: scale(0.97); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.btn-ghost {
+  padding: 0 16px;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover:not(:disabled) { background: var(--border); }
+
+.btn-primary {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  font-size: 15px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #e02447);
+  box-shadow: 0 8px 24px rgba(255, 61, 90, 0.3);
+}
+.btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+.btn-primary.loading { pointer-events: none; opacity: .7; }
+
+/* ---------- Ringkasan ---------- */
+.summary {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.summary-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+.summary-row strong { color: var(--text); text-align: right; }
+
+/* ---------- Legenda ---------- */
+.legend {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.legend li { display: flex; align-items: center; gap: 8px; }
+.swatch { width: 18px; height: 16px; border-radius: 5px 5px 3px 3px; display: inline-block; }
+.swatch.available { background: var(--seat-available); }
+.swatch.selected  { background: var(--seat-selected); }
+.swatch.mine      { background: var(--seat-mine); }
+.swatch.booked    { background: var(--seat-booked); }
+
+/* ---------- Ruang bioskop ---------- */
+.hall {
+  padding: clamp(20px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Layar berada di bawah denah (baris A paling dekat layar) */
+.screen-wrap { width: 100%; max-width: 560px; text-align: center; margin-top: 44px; perspective: 300px; }
+.screen {
+  height: 14px;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: linear-gradient(to bottom, #fff, #cfd6ff);
+  box-shadow: 0 0 40px rgba(200, 210, 255, 0.6), 0 20px 60px rgba(200, 210, 255, 0.25);
+  transform: rotateX(30deg);
+}
+.screen-label {
+  margin-top: 14px;
+  font-family: var(--font-display);
+  letter-spacing: 10px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.seat-map {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: opacity .3s, filter .3s;
+}
+.seat-map.locked { opacity: .55; filter: saturate(.6); }
+.seat-map.locked .seat.available { cursor: not-allowed; }
+
+/* 11 kolom: 5 kiri | lorong | 5 kanan (F05 menempati lorong) */
+.seat-row {
+  --seat-gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(11, var(--seat-w, 44px));
+  gap: var(--seat-gap);
+  align-items: center;
+  justify-items: center;
+}
+.seat-gap { width: 100%; height: 1px; }
+
+/* Kursi */
+.seat {
+  --c: var(--seat-available);
+  position: relative;
+  width: var(--seat-w, 44px);
+  height: 32px;
+  border: none;
+  border-radius: 9px 9px 5px 5px;
+  background: var(--c);
+  color: rgba(255, 255, 255, 0.85);
+  font: 600 10px var(--font-body);
+  cursor: pointer;
+  transition: transform .15s, background .25s, box-shadow .25s;
+}
+/* sandaran tangan */
+.seat::after {
+  content: "";
+  position: absolute;
+  left: 4px; right: 4px; bottom: -5px;
+  height: 4px;
+  border-radius: 0 0 4px 4px;
+  background: var(--c);
+  filter: brightness(.7);
+}
+.seat.available:hover { --c: var(--seat-available-hover); transform: translateY(-2px); }
+.seat.selected {
+  --c: var(--seat-selected);
+  color: #2a1a00;
+  box-shadow: 0 0 16px rgba(255, 181, 71, 0.55);
+  transform: translateY(-2px);
+}
+.seat.mine { --c: var(--seat-mine); color: #062a1f; cursor: default; }
+.seat.booked { --c: var(--seat-booked); color: #8a8a99; cursor: not-allowed; }
+.seat:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* animasi saat kursi baru saja dibooking orang lain */
+.seat.just-booked { animation: flash .9s ease; }
+@keyframes flash {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 61, 90, .9); }
+  100% { box-shadow: 0 0 0 12px rgba(255, 61, 90, 0); }
+}
+
+.lock-hint { margin-top: 24px; font-size: 13px; color: var(--accent-2); text-align: center; }
+.lock-hint.hidden { visibility: hidden; }
+
+.stats {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 24px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.stats strong { color: var(--text); }
+
+/* ---------- Toast ---------- */
+.toast-stack {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 40px));
+}
+.toast {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--seat-available);
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+  animation: slideIn .25s ease;
+}
+.toast.success { border-left-color: var(--seat-mine); }
+.toast.error   { border-left-color: var(--accent); }
+.toast.warn    { border-left-color: var(--accent-2); }
+.toast.out { opacity: 0; transform: translateX(20px); transition: all .25s; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---------- Responsif ---------- */
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .panel { position: static; }
+  .hall { order: -1; }
+}
+
+@media (max-width: 560px) {
+  .seat-map { --seat-w: 24px; gap: 10px; }
+  .seat { height: 24px; font-size: 8px; border-radius: 7px 7px 4px 4px; }
+  .seat-row { --seat-gap: 4px; }
+  .movie-title { font-size: 36px; }
+  .brand-name { font-size: 22px; }
+  .conn-label { display: none; }
+}
+
+@media (max-width: 380px) {
+  .seat-map { --seat-w: 23px; }
+  .seat { height: 21px; font-size: 7px; }
+  .seat-row { --seat-gap: 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
