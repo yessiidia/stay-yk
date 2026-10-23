@@ -10,7 +10,12 @@
    "Your apps" → Web app → SDK setup and configuration → Config.
    Pastikan `databaseURL` ikut terisi (alamat Realtime Database).
    ----------------------------------------------------------- */
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// 1. Import semua modul Firebase yang dibutuhkan
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// 2. Masukkan Konfigurasi Firebase milikmu
 const firebaseConfig = {
   apiKey: "AIzaSyDljRhwCVnJpQ2JcoNouMzMqL4Ng5c0iWY",
   authDomain: "skz-yk.firebaseapp.com",
@@ -21,11 +26,24 @@ const firebaseConfig = {
   measurementId: "G-53QVKY1D10"
 };
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// 3. Inisialisasi Aplikasi, Database, dan Autentikasi
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Tambahkan import khusus untuk Authentication
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+// 4. Eksekusi Login Anonim saat halaman dimuat
+signInAnonymously(auth)
+  .then((result) => {
+    // Jika berhasil, user mendapat UID unik
+    const user = result.user;
+    console.log("Login anonim sukses! UID Pengguna:", user.uid);
+    
+    // Web sudah siap digunakan untuk membaca/menulis data booking
+  })
+  .catch((error) => {
+    // Jika gagal, tampilkan pesan error di console
+    console.error("Gagal login anonim:", error.code, error.message);
+  });
 
 /* -----------------------------------------------------------
    2) KONFIGURASI DENAH (total 58 kursi)
