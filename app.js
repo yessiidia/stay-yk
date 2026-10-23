@@ -15,9 +15,7 @@ const firebaseConfig = {
   messagingSenderId: "959559417054",
   appId: "1:959559417054:web:bcc20b8ae5cb7320fa164f",
   measurementId: "G-53QVKY1D10",
-  // PENTING: Wajib diisi untuk Realtime Database! 
-  // Ganti URL di bawah dengan URL database-mu yang ada di Firebase Console.
-  databaseURL: "https://skz-yk-default-rtdb.asia-southeast1.firebasedatabase.app" 
+  databaseURL: "https://skz-yk-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 // Inisialisasi Firebase
