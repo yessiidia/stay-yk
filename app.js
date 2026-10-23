@@ -21,6 +21,12 @@ const firebaseConfig = {
   measurementId: "G-53QVKY1D10"
 };
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Tambahkan import khusus untuk Authentication
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
 /* -----------------------------------------------------------
    2) KONFIGURASI DENAH (total 58 kursi)
    Grid 11 kolom: 5 kiri | lorong | 5 kanan. Urutan dari atas
